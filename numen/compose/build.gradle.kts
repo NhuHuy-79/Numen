@@ -39,7 +39,7 @@ afterEvaluate {
                 
                 groupId = "com.github.nhuhuy"
                 artifactId = "numen-compose"
-                version = "1.0.0"
+                version = "1.0.2"
 
                 pom {
                     name.set(project.name)
