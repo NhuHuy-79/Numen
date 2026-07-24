@@ -1,34 +1,56 @@
 plugins {
+    id("numen.jitpack")
+    id("maven-publish")
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.compose)
 }
 
 android {
     namespace = "com.nhuhuy.numen.compose"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+    compileSdk = 37
 
     defaultConfig {
         minSdk = 29
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     buildFeatures {
         compose = true
     }
 
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
+    }
+}
+
+afterEvaluate {
+    publishing {
+        publications {
+            register<MavenPublication>("release") {
+                from(components["release"])
+                
+                groupId = "com.github.nhuhuy"
+                artifactId = "numen-compose"
+                version = "1.0.0"
+
+                pom {
+                    name.set(project.name)
+                    description.set("Numen Library - ${project.name}")
+                }
+            }
+        }
+    }
 }
 
 dependencies {
-    //Impl module
     api(project(":numen:core"))
 
     implementation(platform(libs.androidx.compose.bom))
